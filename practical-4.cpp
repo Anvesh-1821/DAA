@@ -22,7 +22,7 @@ long long factorialRecursive(int n)
     return n * factorialRecursive(n - 1);
 }
 
-// Main Program
+
 int main()
 {
     int n;
@@ -52,7 +52,7 @@ int main()
         double recursiveTime =
             (double)(end - start) * 1000000000 / CLOCKS_PER_SEC;
 
-        // Display Results
+
         cout << "\n--- Results for " << n << "! ---\n";
 
         cout << "Iterative Result : " << iterativeResult << endl;
