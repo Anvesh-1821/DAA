@@ -1,0 +1,86 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Edge
+{
+    int u, v, weight;
+};
+
+bool compare(Edge a, Edge b)
+{
+    return a.weight < b.weight;
+}
+
+int parent[10];
+
+int find(int x)
+{
+    if (parent[x] == x)
+        return x;
+
+    return parent[x] = find(parent[x]);
+}
+
+void unite(int a, int b)
+{
+    a = find(a);
+    b = find(b);
+
+    parent[b] = a;
+}
+
+int main()
+{
+    int V = 4;
+    int E = 4;
+
+    Edge edges[] =
+    {
+        {0, 1, 2},   // A-B
+        {0, 2, 3},   // A-C
+        {1, 3, 1},   // B-D
+        {2, 3, 4}    // C-D
+    };
+
+    // Initially every vertex is separate
+    for (int i = 0; i < V; i++)
+    {
+        parent[i] = i;
+    }
+
+    // Sort edges by weight
+    sort(edges, edges + E, compare);
+
+    int total = 0;
+    int count = 0;
+
+    cout << "Edges in Minimum Spanning Tree:\n";
+
+    for (int i = 0; i < E; i++)
+    {
+        int u = edges[i].u;
+        int v = edges[i].v;
+
+        // Check cycle
+        if (find(u) != find(v))
+        {
+            cout << char('A' + u) << " - "
+                 << char('A' + v)
+                 << " = " << edges[i].weight << endl;
+
+            total += edges[i].weight;
+
+            unite(u, v);
+
+            count++;
+
+            if (count == V - 1)
+                break;
+        }
+    }
+
+    cout << "Minimum Cost = " << total << endl;
+
+    return 0;
+}
