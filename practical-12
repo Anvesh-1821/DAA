@@ -1,0 +1,63 @@
+
+
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n = 4;
+    int cost[4][4] = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+
+    int dp[16][4];
+
+    // Initialize DP table
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < n; j++) {
+            dp[i][j] = 99999;
+        }
+    }
+
+    dp[1][0] = 0;
+
+    // DP with bitmasking
+    for (int mask = 1; mask < (1 << n); mask++) {
+        for (int u = 0; u < n; u++) {
+            if (dp[mask][u] == 99999)
+                continue;
+
+            for (int v = 1; v < n; v++) {
+                if (!(mask & (1 << v))) {
+                    int newMask = mask | (1 << v);
+
+                    int newCost = dp[mask][u] + cost[u][v];
+
+                    if (newCost < dp[newMask][v]) {
+                        dp[newMask][v] = newCost;
+                    }
+                }
+            }
+        }
+    }
+
+    // Find minimum tour cost
+    int full = (1 << n) - 1;
+    int ans = 99999;
+
+    for (int i = 1; i < n; i++) {
+        int total = dp[full][i] + cost[i][0];
+
+        if (total < ans) {
+            ans = total;
+        }
+    }
+
+    cout << "Minimum Tour Cost = " << ans;
+
+    return 0;
+}
+
